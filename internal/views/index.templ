@@ -1,0 +1,132 @@
+package views
+
+templ Index() {
+    <body>
+    </body>
+}
+
+// templ AwsIndex() {
+//     @layout() {
+//         <div id="navigator" class="w-1/4 p-2">
+//             <div id="navigator-header" class="h-2">
+//             </div>
+//             <div id="navigator-content" >
+//                <form hx-post="/aws/vpc" hx-trigger="load, change" hx-target="#schema-content" hx-swap="outerHTML"  hx-ext="json-enc">
+//                     <label>
+//                         <input type="checkbox" name="subnet"></input> Subnets
+//                     </label>
+//                     <label>
+//                         <input type="checkbox" name="internet_gateway"></input> Internet Gateways
+//                     </label>
+//                     <button type="button" onclick="submitForm()">Submit</button>
+//                 </form>
+//             </div>
+//         </div>
+//         <div id="schema" class="w-3/4 p-2">
+//             <div id="schema-header" class="h-2"> 
+//             </div>
+//             <div id="schema-content" class="">
+//             </div>
+//         </div>
+// 	}
+
+// }
+
+templ AwsIndex(vpcs []string) {
+    @layout() {
+        <div class="grid grid-cols-4 gap-4 h-screen">
+            <div id="schema-content" class="col-span-3">
+            </div>
+            <div class="border-l border-gray-200 dark:border-gray-800 h-full">
+                <div class="p-4 space-y-4">
+                    // <h3 class="font-semibold text-lg">Vpcs</h3>
+                    // <ul class="space-y-2">
+                    //     @VpcList(vpcs)
+                    // </ul>
+                    <form class="space-y-4" hx-post="/aws/vpc" hx-trigger="load, change" hx-target="#schema-content" hx-ext="json-enc">
+                        <h2 class="font-semibold text-lg">Filter Resources</h2>
+                        <div class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="subnet"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                value="on"
+                                checked
+                            />
+                            <label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="option1"
+                            >
+                                Subnets
+                            </label>
+                        </div>
+                         <div class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="instances"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                value="on"
+                            />
+                            <label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="option3"
+                            >
+                                Instances
+                            </label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="internet_gateway"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                value="on"
+                            />
+                            <label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="option3"
+                            >
+                                Internet Gateways
+                            </label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="route_tables"
+                                aria-hidden="true"
+                                tabindex="-1"
+                                value="on"
+                            />
+                            <label
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                for="option3"
+                            >
+                                Route tables
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+	}
+
+}
+
+templ VpcList(vpcs []string) {
+    for _, vpc := range vpcs {
+        <li>
+            <a href="#" class="text-blue-600 hover:text-blue-800 underline" rel="ugc">
+                { vpc }
+            </a>
+        </li>
+    }
+}
+
+templ Schema(content string) {
+    @svg(content)
+}
+
+
+

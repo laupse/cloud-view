@@ -1,0 +1,41 @@
+regions:
+- us-east-1
+
+# inspired by https://www.terraform.io/docs/providers/aws/guides/custom-service-endpoints.html
+endpoints:
+- region:  us-east-1
+  tls_insecure_skip_verify: true
+  services:
+  - service: ec2
+    url: https://localhost:4566/api/v2/aws/ec2
+  - service: s3
+    url: https://localhost:4566:1060
+  - service: rds
+    url: https://localhost:4566/api/v2/aws/rds
+  - service: elbv2
+    url: https://localhost:4566/api/v2/aws/elbv2
+  - service: efs
+    url: https://localhost:4566/api/v2/aws/efs
+  - service: emr
+    url: https://localhost:4566/api/v2/aws/emr
+  - service: autoscaling
+    url: https://localhost:4566/api/v2/aws/autoscaling
+  - service: cloudwatch
+    url: https://localhost:4566/api/v2/aws/cloudwatch
+  - service: sns
+    url: https://localhost:4566/api/v2/aws/sns
+  - service: iam
+    url: https://localhost:4566/api/v2/aws/iam
+  - service: acm
+    url: https://localhost:4566/api/v2/aws/acm
+
+account-blocklist:
+- "999999999999" # production
+
+accounts:
+  "account-id-of-custom-region-us-east-1" : {}
+
+resource-types:
+  # only nuke these three resources
+  targets:
+    - EC2Subnet
