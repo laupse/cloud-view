@@ -21,7 +21,7 @@ jobs:
       - name: Install Dagger CLI
         run: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
       - name: Run Dagger pipeline
-        run: python3 ci/_dagger.py publish --tag ${{ github.ref_name }}
+        run: dagger run python3 ci/_dagger.py publish --tag ${{ github.ref_name }}
         env:
           DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           REGISTRY_ADDRESS: ghcr.io
