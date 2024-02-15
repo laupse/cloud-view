@@ -1,17 +1,15 @@
 package views
 
 templ layout() {
-    <html data-theme="light">
-        <head>
-            // <link rel="stylesheet" href="/static/css/pico.min.css"/>
-            <link rel="stylesheet" href="/dist/output.css"/>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        </head>
-        // <script src="/static/script/hyperscript@0.9.12.min.js"></script>
-        <script src="/static/script/htmx@2.0.0-alpha1.min.js"></script>
-        <script src="/static/script/json-enc.js"></script>
-        <body class="">
-            { children... }
-        </body>
-    </html>
+	<html data-theme="light">
+		<head>
+			<link rel="stylesheet" href="/dist/output.css"/>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		</head>
+		<script src="/static/script/htmx@2.0.0-alpha2.min.js"></script>
+		<script src="/static/script/json-enc.js"></script>
+		<body class="">
+			{ children... }
+		</body>
+	</html>
 }
