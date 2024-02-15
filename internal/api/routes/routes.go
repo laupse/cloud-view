@@ -27,10 +27,8 @@ func SetupRoute(api *fiber.App, app *app.App) error {
 	api.Static("/dist", "./dist")
 
 	api.Get("/", handlers.Index())
-	aws := api.Group("/aws")
 
-	aws.Get("/vpc", handlers.AwsIndex())
-	aws.Post("/vpc", handlers.AwsVpc(app))
+	api.Get("/aws", handlers.AwsIndex(app))
 
 	return nil
 }

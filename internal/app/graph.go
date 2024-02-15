@@ -32,12 +32,15 @@ type outerGraph struct {
 	graph *d2graph.Graph
 }
 
-func (app *App) CreateGraph(ctx context.Context, request AwsVpcRequest) (string, error) {
+type GraphProvider interface {
+	Create(context context.Context, update chan<- graphUpdate) error
+}
+
+func (app *App) CreateGraph(ctx context.Context, provider GraphProvider) (string, error) {
 	graph, err := app.initGraph(ctx)
 	if err != nil {
 		return "", err
 	}
-	clog.Debug("creating graph for aws")
 	outerGraph := &outerGraph{graph: graph}
 
 	graphUpdateChannel := make(chan graphUpdate)
@@ -51,58 +54,7 @@ func (app *App) CreateGraph(ctx context.Context, request AwsVpcRequest) (string,
 		return nil
 	})
 
-	fetchPool := pool.New().WithContext(ctx)
-	fetchPool.Go(func(context context.Context) error {
-		err = app.InsertAwsVPC(ctx, graphUpdateChannel)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if request.Instances != nil {
-		fetchPool.Go(func(context context.Context) error {
-			err := app.InsertEc2Instances(ctx, graphUpdateChannel)
-			if err != nil {
-				return err
-			}
-			return nil
-		})
-	}
-
-	if request.Subnet != nil {
-		fetchPool.Go(func(context context.Context) error {
-			err := app.InsertSubnets(ctx, graphUpdateChannel)
-			if err != nil {
-				return err
-			}
-			return nil
-		})
-	}
-
-	if request.InternetGateway != nil {
-		fetchPool.Go(func(context context.Context) error {
-			err := app.InsertInternetGateway(ctx, graphUpdateChannel)
-			if err != nil {
-				return err
-			}
-			return nil
-		})
-	}
-
-	if request.RouteTables != nil {
-		fetchPool.Go(func(context context.Context) error {
-			err := app.InsertRouteTables(ctx, graphUpdateChannel)
-			if err != nil {
-				return err
-			}
-			return nil
-		})
-	}
-
-	err = fetchPool.Wait()
-	if err != nil {
-		clog.Error("error encountered when fetching from aws %s", fetchPool.Wait().Error())
-	}
+	provider.Create(ctx, graphUpdateChannel)
 
 	graphUpdateChannel <- graphUpdate{action: Finish}
 

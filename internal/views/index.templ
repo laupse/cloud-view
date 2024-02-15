@@ -1,41 +1,36 @@
 package views
 
+import "github.com/laupse/cloud-view/internal/app"
+
+type CheckboxFilters struct {
+	Name        string
+	DisplayName string
+	Value       *string
+}
+
+
+func checked(filter any) bool {
+    if filter != nil {
+        return true
+    }
+    return false
+}
+
 templ Index() {
     <body>
     </body>
 }
 
-// templ AwsIndex() {
-//     @layout() {
-//         <div id="navigator" class="w-1/4 p-2">
-//             <div id="navigator-header" class="h-2">
-//             </div>
-//             <div id="navigator-content" >
-//                <form hx-post="/aws/vpc" hx-trigger="load, change" hx-target="#schema-content" hx-swap="outerHTML"  hx-ext="json-enc">
-//                     <label>
-//                         <input type="checkbox" name="subnet"></input> Subnets
-//                     </label>
-//                     <label>
-//                         <input type="checkbox" name="internet_gateway"></input> Internet Gateways
-//                     </label>
-//                     <button type="button" onclick="submitForm()">Submit</button>
-//                 </form>
-//             </div>
-//         </div>
-//         <div id="schema" class="w-3/4 p-2">
-//             <div id="schema-header" class="h-2"> 
-//             </div>
-//             <div id="schema-content" class="">
-//             </div>
-//         </div>
-// 	}
 
-// }
-
-templ AwsIndex(vpcs []string) {
+templ AwsIndex(filters app.AwsVpcRequest) {
     @layout() {
-        <div class="grid grid-cols-4 gap-4 h-screen">
-            <div id="schema-content" class="col-span-3">
+        <div class="grid grid-cols-4 h-screen">
+            <div class="col-span-3 h-full w-full relative">
+                <div id="schema-content" class="absolute h-full w-full top-0 left-0 ">
+                </div>
+                <div id="spinner" class="htmx-indicator absolute h-full w-full top-0 left-0 z-10 flex justify-center items-center bg-gray-600 bg-opacity-20">
+                    <div  class="animate-spin w-24 h-24 border-4 border-solid border-b-orange-700 rounded-[50%] inline-block box-border"></div>
+                </div>
             </div>
             <div class="border-l border-gray-200 dark:border-gray-800 h-full">
                 <div class="p-4 space-y-4">
@@ -43,7 +38,9 @@ templ AwsIndex(vpcs []string) {
                     // <ul class="space-y-2">
                     //     @VpcList(vpcs)
                     // </ul>
-                    <form class="space-y-4" hx-post="/aws/vpc" hx-trigger="load, change" hx-target="#schema-content" hx-ext="json-enc">
+
+
+                    <form class="space-y-4" hx-get="/aws" hx-trigger="load, change" hx-target="#schema-content" hx-indicator="#spinner" hx-ext="json-enc" hx-push-url="true">
                         <h2 class="font-semibold text-lg">Filter Resources</h2>
                         <div class="flex items-center space-x-2">
                             <input
@@ -52,7 +49,7 @@ templ AwsIndex(vpcs []string) {
                                 aria-hidden="true"
                                 tabindex="-1"
                                 value="on"
-                                checked
+                                checked?={ checked(filters.Subnet) }
                             />
                             <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -68,6 +65,7 @@ templ AwsIndex(vpcs []string) {
                                 aria-hidden="true"
                                 tabindex="-1"
                                 value="on"
+                                checked?={ checked(filters.Instances) }
                             />
                             <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -83,6 +81,7 @@ templ AwsIndex(vpcs []string) {
                                 aria-hidden="true"
                                 tabindex="-1"
                                 value="on"
+                                checked?={ checked(filters.InternetGateway) }
                             />
                             <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -98,6 +97,7 @@ templ AwsIndex(vpcs []string) {
                                 aria-hidden="true"
                                 tabindex="-1"
                                 value="on"
+                                checked?={ checked(filters.RouteTables) }
                             />
                             <label
                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
