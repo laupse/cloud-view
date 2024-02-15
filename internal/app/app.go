@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"flag"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -33,6 +34,7 @@ func New() (*App, error) {
 
 	var awsConfig aws.Config
 	localstack := flag.Bool("localstack", false, "")
+	localstackHost := flag.String("localstack-host", "localhost:4566", "")
 	verbose := flag.Bool("verbose", false, "")
 	flag.Parse()
 	if *verbose {
@@ -46,7 +48,7 @@ func New() (*App, error) {
 	app.Ec2Client = ec2.NewFromConfig(awsConfig, func(o *ec2.Options) {
 		if *localstack {
 			clog.Info("using localstack endpoints")
-			o.BaseEndpoint = aws.String("http://localhost:4566")
+			o.BaseEndpoint = aws.String(fmt.Sprintf("http://%s", *localstackHost))
 			o.Credentials = aws.AnonymousCredentials{}
 		}
 	})
