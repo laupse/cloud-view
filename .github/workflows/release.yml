@@ -24,6 +24,6 @@ jobs:
         run: dagger run python3 ci/_dagger.py publish --tag ${{ github.ref_name }}
         env:
           DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          REGISTRY_ADDRESS: ghcr.io
+          REGISTRY_ADDRESS: ghcr.io/${{ github.actor }}/cloud-view
           REGISTRY_USERNAME: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
