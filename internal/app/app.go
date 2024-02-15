@@ -47,7 +47,7 @@ func New() (*App, error) {
 
 	app.Ec2Client = ec2.NewFromConfig(awsConfig, func(o *ec2.Options) {
 		if *localstack {
-			clog.Info("using localstack endpoints")
+			clog.Infof("using localstack endpoints on %s", fmt.Sprintf("http://%s", *localstackHost))
 			o.BaseEndpoint = aws.String(fmt.Sprintf("http://%s", *localstackHost))
 			o.Credentials = aws.AnonymousCredentials{}
 		}

@@ -67,6 +67,7 @@ func (app *App) CreateGraph(ctx context.Context, provider GraphProvider) (string
 }
 
 func (app *App) initGraph(context context.Context) (*d2graph.Graph, error) {
+	clog.Info("init graph")
 	context = log.Stderr(context)
 	_, graph, _ := d2lib.Compile(context, "", app.D2CompileOptions, nil)
 

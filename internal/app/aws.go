@@ -41,6 +41,7 @@ var (
 func (provider *AwsGraphProvider) Create(ctx context.Context, graphUpdateChannel chan<- graphUpdate) error {
 	fetchPool := pool.New().WithContext(ctx)
 	fetchPool.Go(func(context context.Context) error {
+		clog.Info("fetching vpc")
 		err := provider.insertAwsVPC(ctx, graphUpdateChannel)
 		if err != nil {
 			return err
@@ -49,6 +50,7 @@ func (provider *AwsGraphProvider) Create(ctx context.Context, graphUpdateChannel
 	})
 	if provider.Request.Instances != nil {
 		fetchPool.Go(func(context context.Context) error {
+			clog.Info("fetching instance")
 			err := provider.insertEc2Instances(ctx, graphUpdateChannel)
 			if err != nil {
 				return err
@@ -59,6 +61,7 @@ func (provider *AwsGraphProvider) Create(ctx context.Context, graphUpdateChannel
 
 	if provider.Request.Subnet != nil {
 		fetchPool.Go(func(context context.Context) error {
+			clog.Info("fetching subnet")
 			err := provider.insertSubnets(ctx, graphUpdateChannel)
 			if err != nil {
 				return err
@@ -69,6 +72,7 @@ func (provider *AwsGraphProvider) Create(ctx context.Context, graphUpdateChannel
 
 	if provider.Request.InternetGateway != nil {
 		fetchPool.Go(func(context context.Context) error {
+			clog.Info("fetching internet gateway")
 			err := provider.insertInternetGateway(ctx, graphUpdateChannel)
 			if err != nil {
 				return err
@@ -79,6 +83,7 @@ func (provider *AwsGraphProvider) Create(ctx context.Context, graphUpdateChannel
 
 	if provider.Request.RouteTables != nil {
 		fetchPool.Go(func(context context.Context) error {
+			clog.Info("fetching route table")
 			err := provider.insertRouteTables(ctx, graphUpdateChannel)
 			if err != nil {
 				return err
