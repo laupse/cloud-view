@@ -91,7 +91,7 @@ async def build_image(dagger_client: dagger.Client) -> dagger.Container:
         .with_directory("static", static)
         .with_directory("dist", dist)
         .with_file("cloud-view", bin)
-        .with_entrypoint(["."])
+        .with_entrypoint(["./cloud-view"])
     )
 
     return final
